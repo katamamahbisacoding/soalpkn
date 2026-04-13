@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Pancasila Kelas 12 - Premium Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #991B1B;
+            --primary-soft: #FEF2F2;
+            --gold: #B45309;
+            --success: #059669;
+            --error: #DC2626;
+            --slate-bg: #F8FAFC;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--slate-bg);
+            color: #0F172A;
+            scroll-behavior: smooth;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .q-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #E2E8F0;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .q-card:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.04), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+        }
+
+        .opt-btn {
+            transition: all 0.25s ease;
+            border: 1.5px solid #F1F5F9;
+            background: #F8FAFC;
+        }
+
+        .opt-btn:hover:not(.locked) {
+            border-color: var(--primary);
+            background-color: var(--primary-soft);
+            transform: translateX(4px);
+        }
+
+        .opt-btn.selected {
+            border-color: var(--primary);
+            background-color: var(--primary);
+            color: white;
+            transform: translateX(8px);
+        }
+
+        .opt-btn.correct {
+            border-color: var(--success) !important;
+            background-color: #ECFDF5 !important;
+            color: var(--success) !important;
+        }
+
+        .opt-btn.wrong {
+            border-color: var(--error) !important;
+            background-color: #FEF2F2 !important;
+            color: var(--error) !important;
+        }
+
+        .nav-dot {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #E2E8F0;
+            background: white;
+        }
+
+        .nav-dot.answered { 
+            background: var(--primary); 
+            color: white; 
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(153, 27, 27, 0.2);
+        }
+        
+        .nav-dot:hover {
+            transform: scale(1.1);
+            border-color: var(--primary);
+        }
+
+        .section-divider {
+            position: relative;
+            text-align: center;
+            margin: 4rem 0 2rem;
+        }
+        .section-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #E2E8F0, transparent);
+        }
+        .section-divider span {
+            position: relative;
+            background: var(--slate-bg);
+            padding: 0 2rem;
+            font-weight: 800;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.7rem;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-slide { animation: slideUp 0.5s ease-out forwards; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <!-- Premium Header -->
+    <header class="glass-header sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-red-800 to-red-600 rounded-2xl flex items-center justify-center shadow-xl shadow-red-200 transform -rotate-3">
+                    <span class="text-white font-black text-2xl tracking-tighter">P</span>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-slate-900 text-xl tracking-tight">Pendidikan Pancasila</h1>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-amber-500"></span>
+                        <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Kelas XII • Premium Courseware</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6 bg-white shadow-sm px-6 py-3 rounded-2xl border border-slate-100">
+                <div class="flex flex-col items-start min-w-[100px]">
+                    <span class="text-[10px] uppercase tracking-widest text-slate-400 font-black">Progress</span>
+                    <span class="text-lg font-black text-slate-800" id="prog-text">0/120</span>
+                </div>
+                <div class="w-40 md:w-64 h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div id="prog-bar" class="h-full bg-gradient-to-r from-red-800 to-red-500 transition-all duration-700 ease-out" style="width: 0%"></div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="flex flex-col items-center">
+                        <span class="text-[9px] font-black text-emerald-500 uppercase">Benar</span>
+                        <span class="text-sm font-bold text-emerald-700" id="head-benar">0</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="text-[9px] font-black text-red-500 uppercase">Salah</span>
+                        <span class="text-sm font-bold text-red-700" id="head-salah">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 mt-12 flex flex-col lg:flex-row gap-10">
+        
+        <!-- Smart Navigation Sidebar -->
+        <aside class="lg:w-[320px] order-2 lg:order-1">
+            <div class="sticky top-32 bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/50">
+                <h3 class="font-extrabold text-slate-900 mb-6 flex items-center justify-between">
+                    <span>Index Soal</span>
+                    <span class="bg-slate-50 text-slate-400 text-[10px] px-2 py-1 rounded-md">120 Total</span>
+                </h3>
+                
+                <div class="space-y-8 max-h-[55vh] overflow-y-auto pr-3 custom-scroll">
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">I. Pilihan Ganda</p>
+                        <div class="grid grid-cols-5 gap-2" id="nav-pg"></div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">II. PG Kompleks</p>
+                        <div class="grid grid-cols-5 gap-2" id="nav-pgk"></div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">III. Essay</p>
+                        <div class="grid grid-cols-5 gap-2" id="nav-essay"></div>
+                    </div>
+                </div>
+
+                <div class="mt-10 pt-6 border-t border-slate-50">
+                    <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-red-800 transition-all shadow-xl shadow-slate-200">
+                        Ke Puncak Halaman
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Question Content -->
+        <div class="flex-1 order-1 lg:order-2 space-y-8" id="quiz-container">
+            <!-- Questions rendered by JS -->
+        </div>
+    </main>
+
+    <!-- Success Modal Card -->
+    <div id="finish-card" class="max-w-4xl mx-auto px-6 mt-16 mb-24 hidden animate-slide">
+        <div class="bg-white border border-slate-100 rounded-[3.5rem] p-12 text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 via-red-600 to-amber-400"></div>
+            <div class="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h2 class="text-4xl font-black text-slate-900 mb-4 tracking-tight">Kuis Selesai!</h2>
+            <p class="text-slate-500 font-medium mb-10 text-lg">Anda telah menuntaskan seluruh tantangan hari ini dengan baik.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto mb-12">
+                <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 transform transition hover:scale-105">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Benar</p>
+                    <p class="text-4xl font-black text-emerald-600" id="res-benar">0</p>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 transform transition hover:scale-105">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Salah</p>
+                    <p class="text-4xl font-black text-red-600" id="res-salah">0</p>
+                </div>
+                <div class="bg-slate-900 p-6 rounded-[2rem] transform transition hover:scale-105">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Skor Akhir</p>
+                    <p class="text-4xl font-black text-white" id="res-skor">0</p>
+                </div>
+            </div>
+            
+            <button onclick="location.reload()" class="px-12 py-5 bg-red-800 text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-red-900 transition-all shadow-2xl shadow-red-200">
+                Ulangi Ujian
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ORIGINAL DATA - NO REDUCTION
+        const RAW_PG = [
+            {q:"Lembaga legislatif di Indonesia terdiri atas...",opts:["MPR, DPR, dan DPD","MPR, MA, dan MK","Presiden, DPR, dan BPK","DPR, DPD, dan KY","MA, MK, dan KPK"],ans:0},
+            {q:"Anggota DPR dipilih melalui...",opts:["Penunjukan presiden","Pemilihan umum oleh rakyat","Keputusan MPR","Pemilihan oleh DPD","Seleksi Mahkamah Agung"],ans:1},
+            {q:"Masa jabatan anggota DPR adalah...",opts:["3 tahun","4 tahun","5 tahun","6 tahun","7 tahun"],ans:2},
+            {q:"MPR berwenang mengubah dan menetapkan...",opts:["Undang-undang biasa","Undang-undang dasar","Peraturan pemerintah","APBN","Kebijakan moneter"],ans:1},
+            {q:"Lembaga eksekutif di Indonesia terdiri atas...",opts:["Presiden, wakil presiden, dan menteri","MPR, DPR, DPD","MA, MK, dan KY","BPK dan KPK","DPR dan DPD"],ans:0},
+            {q:"Lembaga yudikatif yang melaksanakan kekuasaan kehakiman tertinggi adalah...",opts:["Komisi Yudisial","Mahkamah Konstitusi","Mahkamah Agung","BPK","KPK"],ans:2},
+            {q:"Mahkamah Konstitusi diatur dalam pasal berapa UUD NRI 1945?",opts:["Pasal 23E","Pasal 24B","Pasal 24C","Pasal 23D","Pasal 22A"],ans:2},
+            {q:"BPK singkatan dari...",opts:["Badan Pengawas Keuangan","Badan Pemeriksa Keuangan","Badan Pembuat Kebijakan","Biro Pengelola Keuangan","Badan Pemantau Korupsi"],ans:1},
+            {q:"KPK dibentuk berdasarkan Undang-Undang Nomor...",opts:["UU No. 24 Tahun 2003","UU No. 30 Tahun 2002","UU No. 48 Tahun 2009","UU No. 3 Tahun 2004","UU No. 23 Tahun 1999"],ans:1},
+            {q:"Komisi Yudisial diatur dalam pasal...",opts:["Pasal 24A","Pasal 24B","Pasal 24C","Pasal 23E","Pasal 22"],ans:1},
+            {q:"Lembaga independen berdasarkan konstitusi di antaranya adalah...",opts:["BPK dan KPK","Bank Indonesia dan KPK","MPR dan DPR","MA dan MK","TNI dan Polri"],ans:1},
+            {q:"Presiden dan wakil presiden dipilih secara langsung oleh rakyat melalui...",opts:["Sidang MPR","Pemilihan umum","Musyawarah DPR","Keputusan MA","Referendum nasional"],ans:1},
+            {q:"DPD dibentuk untuk menampung aspirasi masyarakat di...",opts:["Tingkat nasional","Tingkat internasional","Daerah-daerah","Lembaga swasta","Kalangan partai"],ans:2},
+            {q:"Fungsi utama DPR salah satunya adalah...",opts:["Memeriksa keuangan negara","Membuat undang-undang","Mengadili perkara","Menetapkan APBN sendiri","Memberhentikan hakim"],ans:1},
+            {q:"Presiden tidak dapat diberhentikan dari jabatannya kecuali melalui proses...",opts:["Mosi tidak percaya DPR","Impeachment","Sidang MK biasa","Keputusan BPK","Referendum"],ans:1},
+            {q:"Bank Indonesia diatur dalam pasal UUD NRI Tahun 1945 yaitu...",opts:["Pasal 23A","Pasal 23B","Pasal 23C","Pasal 23D","Pasal 23E"],ans:3},
+            {q:"Sistem pemerintahan Indonesia adalah...",opts:["Parlementer","Presidensial","Semi-presidensial","Monarki konstitusional","Federal"],ans:1},
+            {q:"Bentuk pemerintahan Indonesia adalah...",opts:["Monarki","Republik konstitusional","Oligarki","Aristokrasi","Teokrasi"],ans:1},
+            {q:"Anggota DPD berasal dari calon...",opts:["Partai politik","Perseorangan mewakili provinsi","Utusan lembaga negara","Akademisi terpilih","Tokoh agama"],ans:1},
+            {q:"Amendemen UUD NRI Tahun 1945 dilakukan dalam berapa tahap?",opts:["2 tahap","3 tahap","4 tahap","5 tahap","6 tahap"],ans:2},
+            {q:"Kerja sama dalam Kamus Besar Bahasa Indonesia berarti...",opts:["Persaingan dua pihak","Kegiatan oleh beberapa pihak untuk tujuan bersama","Tindakan tanpa pamrih","Kegiatan sukarela","Bentuk gotong royong"],ans:1},
+            {q:"Gotong royong merupakan istilah asli Indonesia yang berasal dari kata gotong yang berarti...",opts:["Tolong","Bekerja","Bersatu","Berbagi","Doa"],ans:1},
+            {q:"Istilah gotong royong di Bali disebut...",opts:["Mapalus","Ngayah","Batobo","Sambatan","Masohi"],ans:1},
+            {q:"Istilah gotong royong di Bengkulu adalah...",opts:["Batobo","Alang Tulung","Ngacau Gelamai","Nugal","Bari"],ans:2},
+            {q:"Manfaat gotong royong antara lain...",opts:["Meningkatkan persaingan","Memperkuat solidaritas sosial","Mengurangi kerja sama","Memperlambat pekerjaan","Memupuk individualisme"],ans:1},
+            {q:"Salah satu bentuk kerja sama yang berupa negosiasi dua pihak disebut...",opts:["Koalisi","Bargaining","Cooptation","Joint venture","Kolaborasi"],ans:1},
+            {q:"Joint venture adalah kerja sama yang melibatkan...",opts:["Dua partai politik","Banyak pihak dengan latar berbeda","Satu lembaga pemerintah","Kegiatan sukarela","Proses tawar-menawar"],ans:1},
+            {q:"Nilai yang terkandung dalam gotong royong di antaranya adalah...",opts:["Persaingan dan ambisi","Persatuan dan kebersamaan","Keegoisan dan individualisme","Kompetisi global","Pertumbuhan ekonomi"],ans:1},
+            {q:"Implementasi gotong royong di lingkungan sekolah contohnya adalah...",opts:["Ujian individu","Piket kelas bersama","Kompetisi nilai","Kerja sendiri","Belajar diam-diam"],ans:1},
+            {q:"Cooptation adalah proses...",opts:["Persaingan antarorganisasi","Penerimaan unsur baru dalam kepemimpinan","Pemilihan presiden","Pembentukan partai","Penggabungan perusahaan"],ans:1},
+            {q:"Fungsi pengawasan DPR mencakup pengawasan terhadap...",opts:["Keputusan MA","Pelaksanaan UUD NRI Tahun 1945 dan undang-undang","Kebijakan Bank Indonesia","Pengelolaan BPK","Pemilihan hakim"],ans:1},
+            {q:"MK memiliki wewenang untuk...",opts:["Memeriksa keuangan negara","Menguji undang-undang terhadap UUD NRI 1945","Mengangkat hakim agung","Menetapkan APBN","Memberhentikan presiden langsung"],ans:1},
+            {q:"Hasil pemeriksaan BPK diserahkan kepada...",opts:["Presiden","DPR, DPD, dan DPRD","MA dan MK","KPK","Menteri keuangan"],ans:1},
+            {q:"Masa sidang DPR dalam satu tahun dibagi menjadi...",opts:["Dua masa persidangan","Tiga masa persidangan","Empat atau lima masa persidangan","Enam masa persidangan","Satu masa persidangan"],ans:2},
+            {q:"Nilai kebersamaan dalam gotong royong berarti...",opts:["Bekerja sendiri","Bekerja sama untuk kepentingan bersama tanpa melihat perbedaan","Bersaing dengan orang lain","Mengutamakan kepentingan pribadi","Menghindari tanggung jawab"],ans:1},
+            {q:"Komisi Yudisial bertugas memastikan...",opts:["Pembuatan undang-undang","Integritas dan profesionalisme hakim","Pengelolaan keuangan negara","Pemberantasan korupsi","Stabilitas moneter"],ans:1},
+            {q:"Lembaga negara yang melantik presiden dan wakil presiden adalah...",opts:["DPR","DPD","MPR","MA","MK"],ans:2},
+            {q:"DPR menetapkan APBN bersama...",opts:["MPR","MA","Presiden dengan memperhatikan DPD","BPK","KPK"],ans:2},
+            {q:"Istilah gotong royong di Minahasa disebut...",opts:["Ngayah","Mapalus","Sambatan","Batobo","Bari"],ans:1},
+            {q:"Kegiatan gotong royong membangun jembatan merupakan contoh nilai...",opts:["Persaingan","Persatuan","Ekonomi","Kompetisi","Prestasi"],ans:1},
+            {q:"Lembaga pemeriksa keuangan yang bebas dan mandiri adalah...",opts:["KPK","MA","BPK","Komisi Yudisial","Bank Indonesia"],ans:2},
+            {q:"KY memiliki wewenang merekomendasikan pengangkatan hakim di tingkat...",opts:["Mahkamah Agung saja","Pengadilan tinggi dan lebih rendah","Pengadilan internasional","Semua tingkat langsung","Mahkamah Konstitusi"],ans:1},
+            {q:"Salah satu manfaat kerja sama adalah...",opts:["Meningkatkan kompetisi negatif","Meningkatkan kemampuan berkomunikasi","Mengurangi solidaritas","Memperlemah hubungan sosial","Mendorong individualisme"],ans:1},
+            {q:"Presiden memegang kekuasaan pemerintahan menurut...",opts:["Keputusan DPR","Undang-undang dasar","Kebijakan MPR","Peraturan MA","Aturan KPK"],ans:1},
+            {q:"Salah satu fungsi DPD adalah...",opts:["Membuat undang-undang secara mandiri","Mengajukan usul dan memberikan pertimbangan di bidang legislasi daerah","Mengawasi kinerja presiden","Menetapkan APBN","Menguji undang-undang"],ans:1},
+            {q:"Kata 'royong' dalam gotong royong berarti...",opts:["Bekerja","Bersama","Tolong","Sukarela","Peduli"],ans:1},
+            {q:"Lembaga negara independen dibentuk untuk menciptakan pemerintahan yang...",opts:["Kuat secara militer","Bersih dan terbebas dari kepentingan politik","Terpusat pada presiden","Dikuasai partai tertentu","Bergantung pada luar negeri"],ans:1},
+            {q:"Implementasi gotong royong di lingkungan keluarga contohnya...",opts:["Kompetisi nilai antar anak","Membersihkan rumah bersama-sama","Bersaing untuk mendapat hadiah","Bekerja sendiri-sendiri","Mengabaikan pekerjaan rumah"],ans:1},
+            {q:"Koalisi adalah bentuk kerja sama yang dilakukan...",opts:["Satu pihak saja","Dua organisasi atau lebih dengan tujuan sama","Hanya oleh pemerintah","Antarnegara saja","Antara individu dan lembaga"],ans:1},
+            {q:"Mahkamah Agung membawahi peradilan...",opts:["Umum, agama, militer, dan tata usaha negara","Internasional saja","Hanya perdata","Militer saja","Konstitusional saja"],ans:0},
+            {q:"Nilai persatuan dalam gotong royong mengajarkan kita untuk...",opts:["Mengutamakan perbedaan suku","Menghormati dan menerima keberagaman","Bersaing antar kelompok","Menghindari kerja sama","Memprioritaskan kepentingan pribadi"],ans:1},
+            {q:"DPR bersidang sedikitnya berapa kali dalam setahun?",opts:["Dua kali","Tiga kali","Satu kali","Empat kali","Lima kali"],ans:2},
+            {q:"Masa jabatan anggota MPR adalah...",opts:["Tiga tahun","Empat tahun","Lima tahun","Enam tahun","Tujuh tahun"],ans:2},
+            {q:"Bank Indonesia memiliki fungsi sebagai...",opts:["Penjaga batas wilayah","Bank sentral yang menjaga stabilitas nilai mata uang","Pengawas hakim","Pemeriksa keuangan","Pembuat undang-undang"],ans:1},
+            {q:"Salah satu nilai gotong royong adalah rela berkorban, yang berarti...",opts:["Mengutamakan diri sendiri","Pengorbanan demi kepentingan bersama","Menghindari pekerjaan berat","Mencari keuntungan pribadi","Bersaing dengan orang lain"],ans:1},
+            {q:"Lembaga yang mengawasi perilaku hakim adalah...",opts:["Mahkamah Agung","Mahkamah Konstitusi","Komisi Yudisial","BPK","DPR"],ans:2},
+            {q:"Peran DPR dalam bidang politik adalah...",opts:["Memeriksa keuangan negara","Membuat undang-undang dan mengawasi kebijakan negara","Mengadili perkara pidana","Menetapkan kebijakan moneter","Memberhentikan presiden langsung"],ans:1},
+            {q:"Dalam bidang ekonomi, lembaga yang menjaga stabilitas nilai mata uang adalah...",opts:["Kementerian Sosial","Bank Indonesia","BPK","KPK","MA"],ans:1},
+            {q:"Lembaga negara yang berperan dalam bidang pertahanan adalah...",opts:["Polri dan BPK","Kementerian Pertahanan dan TNI","MA dan MK","DPR dan DPD","Bank Indonesia"],ans:1},
+            {q:"Amendemen UUD NRI Tahun 1945 dilaksanakan dari tahun...",opts:["1995 hingga 1999","1999 hingga 2002","2000 hingga 2005","2002 hingga 2007","2005 hingga 2010"],ans:1},
+            {q:"Masa reses DPR adalah masa anggota DPR...",opts:["Bekerja di gedung DPR","Bekerja di luar gedung DPR menemui konstituen","Liburan panjang","Mengikuti sidang MPR","Membuat undang-undang baru"],ans:1},
+            {q:"Nilai kerendahan hati dalam gotong royong berarti...",opts:["Merasa paling hebat","Menjauhi sifat sombong dan angkuh","Menghindari pekerjaan","Mengutamakan status sosial","Bersikap egois"],ans:1},
+            {q:"Gotong royong sangat melekat dalam kehidupan masyarakat Indonesia karena merupakan...",opts:["Budaya asli bangsa Indonesia","Budaya asli bangsa Indonesia","Aturan pemerintah","Kewajiban undang-undang","Kebiasaan modern"],ans:1},
+            {q:"Pengawasan atas keuangan negara oleh BPK dilaksanakan berdasarkan...",opts:["Kebijakan presiden","Undang-undang tentang pemeriksaan keuangan","Keputusan DPR","Peraturan MA","Arahan MPR"],ans:1},
+            {q:"Lembaga yang menangani sengketa hasil pemilihan umum adalah...",opts:["Mahkamah Agung","Komisi Yudisial","Mahkamah Konstitusi","KPU saja","DPR"],ans:2},
+            {q:"Kerja sama antarnegara dilakukan untuk...",opts:["Meningkatkan persaingan","Memenuhi kepentingan dan tujuan nasional","Mengurangi hubungan internasional","Membatasi perdagangan","Memperkuat perbedaan"],ans:1},
+            {q:"Dalam bidang sosial, lembaga yang memastikan pemenuhan hak-hak sosial warga negara adalah...",opts:["TNI dan Polri","Kementerian Sosial dan Kementerian Pendidikan","BPK dan KPK","MA dan MK","Bank Indonesia"],ans:1},
+            {q:"Sistem presidensial berarti presiden sekaligus sebagai...",opts:["Ketua parlemen","Kepala negara dan kepala pemerintahan","Ketua partai","Pemimpin MA","Pengawas BPK"],ans:1},
+            {q:"KPK didirikan pada tahun...",opts:["1999","2002","2003","2003","2005"],ans:2},
+            {q:"Prinsip kedaulatan rakyat dalam DPR ditegaskan melalui...",opts:["Pengangkatan oleh presiden","Pemilihan umum oleh rakyat","Keputusan MPR","Seleksi akademik","Rekomendasi partai"],ans:1},
+            {q:"Nilai tidak egois dalam gotong royong berarti...",opts:["Mementingkan diri sendiri","Menempatkan kepentingan bersama di atas kepentingan pribadi","Menghindari tanggung jawab","Bersikap kompetitif","Mengabaikan orang lain"],ans:1},
+            {q:"Keberhasilan kerja sama dipengaruhi oleh...",opts:["Hanya jumlah peserta","Banyak faktor termasuk komunikasi dan komitmen","Keberuntungan semata","Status sosial peserta","Faktor keuangan saja"],ans:1},
+            {q:"Dalam bidang budaya, lembaga yang berperan melestarikan warisan budaya adalah...",opts:["TNI","Kementerian Pendidikan dan Kebudayaan serta Badan Pelestarian Pusaka","BPK","KPK","Bank Indonesia"],ans:1},
+            {q:"Istilah gotong royong di Aceh disebut...",opts:["Batobo","Ngayah","Alang Tulung","Mapalus","Nugal"],ans:2},
+            {q:"Peran lembaga keamanan seperti Polri adalah...",opts:["Membuat undang-undang","Menjaga keamanan dan ketertiban masyarakat","Memeriksa keuangan","Mengadili perkara","Mengawasi hakim"],ans:1},
+            {q:"Gotong royong dalam lingkungan sekolah mendorong terwujudnya...",opts:["Kompetisi antar siswa","Kebersihan dan kebersamaan di lingkungan sekolah","Persaingan nilai","Individualism","Isolasi sosial"],ans:1},
+            {q:"Salah satu contoh kerja sama Indonesia dengan negara lain adalah...",opts:["Membangun tembok batas","Kerja sama ekstradisi koruptor dengan Malaysia","Menutup perbatasan","Bersaing di perdagangan internasional","Menolak organisasi internasional"],ans:1},
+            {q:"Fungsi anggaran DPR adalah...",opts:["Mengadili kasus korupsi","Menyusun dan menetapkan APBN bersama presiden","Mengangkat hakim","Memeriksa keuangan","Memberhentikan menteri"],ans:1},
+            {q:"Unsur pokok kebersamaan dalam gotong royong antara lain...",opts:["Kompetisi dan ambisi","Menghargai, tidak egois, rela berkorban, dan rendah hati","Keegoisan dan persaingan","Status sosial tinggi","Keuntungan finansial"],ans:1},
+            {q:"MK memutus perselisihan kewenangan antarlembaga negara berdasarkan...",opts:["UU biasa","UUD NRI Tahun 1945","Keputusan presiden","Rekomendasi DPR","Peraturan MA"],ans:1},
+            {q:"Mahkamah Agung memiliki wewenang untuk mengadili kasus pada tingkat...",opts:["Pertama","Banding","Kasasi","Internasional","Pidana militer saja"],ans:2},
+            {q:"Lembaga yang bertugas mempromosikan seni dan kebudayaan Indonesia adalah...",opts:["TNI","Polri","Kementerian Pendidikan dan Kebudayaan","BPK","KPU"],ans:2},
+            {q:"Gotong royong dapat mengurangi...",opts:["Solidaritas sosial","Beban orang lain","Kerjasama","Produktivitas","Keharmonisan"],ans:1},
+            {q:"Pasal 4 ayat (1) UUD NRI Tahun 1945 menegaskan bahwa...",opts:["Presiden mengangkat menteri","Presiden memegang kekuasaan pemerintahan menurut UUD","MPR adalah lembaga tertinggi","DPR memiliki kekuasaan legislatif penuh","BPK memeriksa keuangan negara"],ans:1},
+            {q:"Salah satu unsur kerja sama adalah memiliki...",opts:["Perbedaan tujuan","Tujuan atau target tertentu","Persaingan satu sama lain","Ketidaksepakatan","Kepentingan yang bertolak belakang"],ans:1},
+            {q:"Gotong royong memperkuat hubungan antara warga tanpa memandang perbedaan...",opts:["Tingkat pendidikan","Suku, agama, ras, dan budaya","Jumlah kekayaan saja","Jabatan pekerjaan","Usia"],ans:1},
+            {q:"Salah satu tugas MPR adalah...",opts:["Memeriksa keuangan negara","Melantik presiden dan wakil presiden","Mengadili perkara konstitusi","Menetapkan kebijakan moneter","Mengawasi hakim"],ans:1},
+            {q:"Kerja sama bersifat sukarela berbeda dengan...",opts:["Gotong royong yang memiliki pamrih","Persaingan bebas","Kewajiban hukum","Peraturan pemerintah","Keputusan pengadilan"],ans:0},
+            {q:"Nilai menghargai dalam gotong royong mencakup penghargaan terhadap...",opts:["Status sosial peserta","Keterampilan, kemampuan, dan tenaga yang disumbangkan","Jabatan tertinggi","Kekayaan materi","Latar belakang pendidikan"],ans:1},
+            {q:"Dalam sidang paripurna MPR, presiden dan wakil presiden dilantik berdasarkan...",opts:["Keputusan DPR","Hasil pemilihan umum","Rekomendasi partai","Keputusan MA","Arahan KPK"],ans:1},
+            {q:"Pelaksanaan gotong royong membantu...",opts:["Memperlambat pekerjaan","Mempercepat pekerjaan dan memanfaatkan waktu seefektif mungkin","Meningkatkan beban kerja","Mengurangi solidaritas","Memperkuat perbedaan"],ans:1},
+            {q:"Peran DPD dalam pembuatan kebijakan nasional adalah...",opts:["Menetapkan undang-undang secara mandiri","Memberikan pertimbangan atas RUU terkait daerah","Mengawasi hakim","Memeriksa keuangan negara","Memberhentikan presiden"],ans:1},
+            {q:"Gotong royong berbeda dari kerja sama biasa karena dilandasi oleh...",opts:["Motif ekonomi","Nilai kesukarelaan (tanpa pamrih)","Perintah pemerintah","Aturan hukum","Kepentingan finansial"],ans:1},
+            {q:"Salah satu lembaga negara yang berperan dalam bidang keamanan selain Polri adalah...",opts:["BPK","KPK","Lembaga keamanan lainnya yang menjaga ketertiban","MA","Bank Indonesia"],ans:2},
+            {q:"Presiden dibantu oleh satu orang...",opts:["Ketua DPR","Wakil presiden","Ketua MPR","Ketua MA","Kepala BPK"],ans:1},
+            {q:"MPR bersidang sedikitnya...",opts:["Satu kali dalam lima tahun","Dua kali setahun","Tiga kali dalam tiga tahun","Empat kali setahun","Lima kali dalam lima tahun"],ans:0},
+            {q:"Implementasi gotong royong di lingkungan keluarga dapat...",opts:["Mengurangi keharmonisan","Mempererat hubungan antaranggota keluarga","Meningkatkan persaingan","Mengurangi rasa kebersamaan","Menimbulkan konflik"],ans:1},
+            {q:"Salah satu manfaat kerja sama adalah membentuk...",opts:["Persaingan bebas","Pribadi yang terbuka dan menerima perbedaan","Individualisme","Sikap egois","Kelompok eksklusif"],ans:1},
+        ];
+
+        const RAW_PGK = [
+            {q:"Manakah yang termasuk lembaga legislatif di Indonesia?",opts:["MPR","DPR","DPD","Mahkamah Agung","Komisi Yudisial"],ans:[0,1,2]},
+            {q:"Manakah yang merupakan fungsi DPR?",opts:["Legislasi","Anggaran","Pengawasan","Memeriksa keuangan negara","Mengadili perkara"],ans:[0,1,2]},
+            {q:"Manakah yang termasuk nilai-nilai gotong royong?",opts:["Persatuan","Kebersamaan","Tolong-menolong","Persaingan","Individualisme"],ans:[0,1,2]},
+            {q:"Manakah yang merupakan wewenang Mahkamah Konstitusi?",opts:["Menguji UU terhadap UUD","Memutus sengketa hasil pemilu","Memutus perselisihan kewenangan lembaga","Memeriksa keuangan negara","Mengangkat hakim agung"],ans:[0,1,2]},
+            {q:"Manakah yang merupakan bentuk kerja sama?",opts:["Bargaining","Koalisi","Joint venture","Persaingan bebas","Konflik terbuka"],ans:[0,1,2]},
+            {q:"Manakah yang termasuk lembaga yudikatif?",opts:["Mahkamah Agung","Mahkamah Konstitusi","Komisi Yudisial","DPR","BPK"],ans:[0,1,2]},
+            {q:"Manakah implementasi gotong royong di lingkungan sekolah?",opts:["Piket kelas bersama","Kerja kelompok","Menjaga kebersihan lingkungan","Kompetisi nilai","Bekerja sendiri"],ans:[0,1,2]},
+            {q:"Manakah yang merupakan tugas MPR?",opts:["Mengubah dan menetapkan UUD","Melantik presiden dan wakil presiden","Memberhentikan presiden sesuai UUD","Memeriksa keuangan","Mengawasi hakim"],ans:[0,1,2]},
+            {q:"Manakah yang merupakan manfaat kerja sama?",opts:["Mengembangkan moralitas dan interaksi sosial","Meningkatkan kemampuan berkomunikasi","Membentuk kekompakan","Meningkatkan persaingan negatif","Mendorong isolasi"],ans:[0,1,2]},
+            {q:"Manakah lembaga negara independen di Indonesia?",opts:["Bank Indonesia","KPK","BPK","DPR","Kementerian Keuangan"],ans:[0,1,2]},
+        ];
+
+        const ESSAY = [
+            "Jelaskan perbedaan antara lembaga legislatif, eksekutif, dan yudikatif di Indonesia beserta contoh lembaganya masing-masing!",
+            "Uraikan fungsi-fungsi DPR dalam sistem pemerintahan Indonesia berdasarkan UUD NRI Tahun 1945!",
+            "Jelaskan peran Mahkamah Konstitusi dalam menjaga konstitusi dan demokrasi di Indonesia!",
+            "Apa perbedaan antara kerja sama dan gotong royong? Berikan contoh masing-masing dalam kehidupan sehari-hari!",
+            "Jelaskan nilai-nilai yang terkandung dalam gotong royong dan bagaimana nilai-nilai tersebut dapat memperkuat persatuan bangsa!",
+            "Bagaimana peran BPK dalam menjaga akuntabilitas dan transparansi pengelolaan keuangan negara? Jelaskan!",
+            "Uraikan implementasi gotong royong di lingkungan keluarga, sekolah, dan masyarakat beserta manfaatnya!",
+            "Jelaskan kedudukan dan fungsi DPD dalam sistem ketatanegaraan Indonesia pascaamendemen UUD NRI Tahun 1945!",
+            "Bagaimana amendemen UUD NRI Tahun 1945 memperkuat sistem demokrasi dan kedaulatan rakyat di Indonesia?",
+            "Jelaskan peran lembaga negara (pilih salah satu: KPK, Komisi Yudisial, atau Bank Indonesia) dalam berbagai bidang kehidupan berbangsa dan bernegara!"
+        ];
+
+        // SHUFFLE LOGIC
+        function shuffleOptions(data) {
+            return data.map(item => {
+                const correctTexts = Array.isArray(item.ans) 
+                    ? item.ans.map(idx => item.opts[idx]) 
+                    : item.opts[item.ans];
+
+                const shuffledOpts = [...item.opts];
+                for (let i = shuffledOpts.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffledOpts[i], shuffledOpts[j]] = [shuffledOpts[j], shuffledOpts[i]];
+                }
+
+                let newAns;
+                if (Array.isArray(item.ans)) {
+                    newAns = correctTexts.map(t => shuffledOpts.indexOf(t)).sort((a,b)=>a-b);
+                } else {
+                    newAns = shuffledOpts.indexOf(correctTexts);
+                }
+
+                return { ...item, opts: shuffledOpts, ans: newAns };
+            });
+        }
+
+        const PG = shuffleOptions(RAW_PG);
+        const PGK = shuffleOptions(RAW_PGK);
+
+        let state = {
+            answered: { pg: {}, pgk: {}, essay: {} },
+            pgkTemp: {}
+        };
+
+        function updateUI() {
+            const pgCount = Object.keys(state.answered.pg).length;
+            const pgkCount = Object.keys(state.answered.pgk).length;
+            const essayCount = Object.keys(state.answered.essay).length;
+            const total = pgCount + pgkCount + essayCount;
+
+            document.getElementById('prog-text').textContent = `${total}/120`;
+            document.getElementById('prog-bar').style.width = `${(total/120)*100}%`;
+            
+            let benar = 0, salah = 0;
+            Object.values(state.answered.pg).forEach(v => v ? benar++ : salah++);
+            Object.values(state.answered.pgk).forEach(v => v ? benar++ : salah++);
+            
+            document.getElementById('head-benar').textContent = benar;
+            document.getElementById('head-salah').textContent = salah;
+
+            if(total === 120) {
+                document.getElementById('finish-card').classList.remove('hidden');
+                document.getElementById('res-benar').textContent = benar;
+                document.getElementById('res-salah').textContent = salah;
+                document.getElementById('res-skor').textContent = Math.round((benar / 110) * 100);
+            }
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            let html = '';
+
+            // Render Section PG
+            html += `<div class="section-divider"><span>Bagian I — Pilihan Ganda (100)</span></div>`;
+            PG.forEach((q, i) => {
+                html += `
+                <div id="q-pg-${i}" class="q-card rounded-[2.5rem] p-10 animate-slide" style="animation-delay: ${i * 0.05}s">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="bg-red-800 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Butir ${i+1}</span>
+                        <div class="h-1 w-8 bg-slate-100 rounded-full"></div>
+                        <span class="text-slate-400 text-[10px] font-black uppercase tracking-wider">Multiple Choice</span>
+                    </div>
+                    <p class="text-slate-900 font-bold leading-relaxed mb-10 text-lg md:text-xl">${q.q}</p>
+                    <div class="grid grid-cols-1 gap-4">
+                        ${q.opts.map((opt, oi) => `
+                            <button onclick="handlePG(${i}, ${oi})" id="opt-pg-${i}-${oi}" class="opt-btn flex items-center text-left gap-5 p-5 rounded-2xl text-[15px] font-bold group">
+                                <span class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xs font-black text-slate-400 group-hover:border-red-800 transition-colors">${String.fromCharCode(65+oi)}</span>
+                                <span class="flex-1">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="fb-pg-${i}" class="mt-8 p-6 rounded-3xl hidden text-sm font-bold border transform transition duration-500 scale-95 opacity-0"></div>
+                </div>`;
+            });
+
+            // Render Section PGK
+            html += `<div class="section-divider"><span>Bagian II — PG Kompleks (10)</span></div>`;
+            PGK.forEach((q, i) => {
+                html += `
+                <div id="q-pgk-${i}" class="q-card rounded-[2.5rem] p-10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="bg-amber-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Butir ${101+i}</span>
+                        <div class="h-1 w-8 bg-slate-100 rounded-full"></div>
+                        <span class="text-slate-400 text-[10px] font-black uppercase tracking-wider">Pilih 3 Jawaban</span>
+                    </div>
+                    <p class="text-slate-900 font-bold leading-relaxed mb-10 text-lg md:text-xl">${q.q}</p>
+                    <div class="grid grid-cols-1 gap-4 mb-8">
+                        ${q.opts.map((opt, oi) => `
+                            <button onclick="handlePGKTemp(${i}, ${oi})" id="opt-pgk-${i}-${oi}" class="opt-btn flex items-center text-left gap-5 p-5 rounded-2xl text-[15px] font-bold">
+                                <span class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xs font-black text-slate-400">${String.fromCharCode(65+oi)}</span>
+                                <span class="flex-1">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <button id="check-pgk-${i}" onclick="checkPGK(${i})" disabled class="w-full py-5 bg-slate-100 text-slate-400 rounded-3xl font-black text-xs uppercase tracking-widest transition-all">Pilih 3 Jawaban</button>
+                    <div id="fb-pgk-${i}" class="mt-8 p-6 rounded-3xl hidden text-sm font-bold border"></div>
+                </div>`;
+            });
+
+            // Render Section Essay
+            html += `<div class="section-divider"><span>Bagian III — Essay (10)</span></div>`;
+            ESSAY.forEach((q, i) => {
+                html += `
+                <div id="q-essay-${i}" class="q-card rounded-[2.5rem] p-10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="bg-slate-900 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Butir ${111+i}</span>
+                        <div class="h-1 w-8 bg-slate-100 rounded-full"></div>
+                        <span class="text-slate-400 text-[10px] font-black uppercase tracking-wider">Uraian / Essay</span>
+                    </div>
+                    <p class="text-slate-900 font-bold leading-relaxed mb-10 text-lg md:text-xl">${q}</p>
+                    <textarea id="inp-essay-${i}" placeholder="Analisis dan tuliskan jawaban Anda di sini..." class="w-full min-h-[200px] p-8 rounded-3xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-red-800/5 focus:bg-white transition-all text-sm font-medium mb-6 placeholder:text-slate-300"></textarea>
+                    <button id="btn-essay-${i}" onclick="submitEssay(${i})" class="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-red-800 transition-all shadow-xl shadow-slate-200">Simpan Jawaban Uraian</button>
+                    <div id="fb-essay-${i}" class="mt-6 p-6 rounded-3xl hidden bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-black uppercase tracking-widest">✓ Jawaban Tersimpan</div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+            renderNav();
+        }
+
+        function renderNav() {
+            const pgNav = document.getElementById('nav-pg');
+            const pgkNav = document.getElementById('nav-pgk');
+            const essayNav = document.getElementById('nav-essay');
+
+            pgNav.innerHTML = PG.map((_, i) => `<div id="dot-pg-${i}" onclick="scrollToSoal('q-pg-${i}')" class="nav-dot"> ${i+1} </div>`).join('');
+            pgkNav.innerHTML = PGK.map((_, i) => `<div id="dot-pgk-${i}" onclick="scrollToSoal('q-pgk-${i}')" class="nav-dot"> ${101+i} </div>`).join('');
+            essayNav.innerHTML = ESSAY.map((_, i) => `<div id="dot-essay-${i}" onclick="scrollToSoal('q-essay-${i}')" class="nav-dot"> ${111+i} </div>`).join('');
+        }
+
+        function scrollToSoal(id) {
+            const el = document.getElementById(id);
+            const headerOffset = 160;
+            const elementPosition = el.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+
+        function handlePG(qi, oi) {
+            if(state.answered.pg[qi] !== undefined) return;
+            const isCorrect = PG[qi].ans === oi;
+            state.answered.pg[qi] = isCorrect;
+
+            PG[qi].opts.forEach((_, idx) => {
+                const btn = document.getElementById(`opt-pg-${qi}-${idx}`);
+                btn.classList.add('locked');
+                if(idx === PG[qi].ans) btn.classList.add('correct');
+                else if(idx === oi) btn.classList.add('wrong');
+            });
+
+            const fb = document.getElementById(`fb-pg-${qi}`);
+            fb.classList.remove('hidden');
+            setTimeout(() => {
+                fb.classList.remove('scale-95', 'opacity-0');
+            }, 50);
+            
+            fb.className = `mt-8 p-6 rounded-3xl text-xs font-black uppercase tracking-[0.2em] border transition-all duration-500 ${isCorrect ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-red-50 text-red-700 border-red-100'}`;
+            fb.innerHTML = isCorrect ? `✓ Jawaban Tepat` : `✗ Jawaban Benar: ${String.fromCharCode(65+PG[qi].ans)}`;
+            
+            document.getElementById(`dot-pg-${qi}`).classList.add('answered');
+            updateUI();
+        }
+
+        function handlePGKTemp(qi, oi) {
+            if(state.answered.pgk[qi] !== undefined) return;
+            if(!state.pgkTemp[qi]) state.pgkTemp[qi] = new Set();
+            const btn = document.getElementById(`opt-pgk-${qi}-${oi}`);
+            if(state.pgkTemp[qi].has(oi)) {
+                state.pgkTemp[qi].delete(oi);
+                btn.classList.remove('selected');
+            } else {
+                if(state.pgkTemp[qi].size >= 3) return;
+                state.pgkTemp[qi].add(oi);
+                btn.classList.add('selected');
+            }
+            const checkBtn = document.getElementById(`check-pgk-${qi}`);
+            if(state.pgkTemp[qi].size === 3) {
+                checkBtn.disabled = false;
+                checkBtn.className = "w-full py-5 bg-red-800 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-red-100 hover:bg-red-900 transition-all";
+                checkBtn.textContent = "Koreksi Jawaban";
+            } else {
+                checkBtn.disabled = true;
+                checkBtn.className = "w-full py-5 bg-slate-100 text-slate-400 rounded-3xl font-black text-xs uppercase tracking-widest transition-all";
+                checkBtn.textContent = `Pilih ${3 - state.pgkTemp[qi].size} Jawaban Lagi`;
+            }
+        }
+
+        function checkPGK(qi) {
+            const selected = Array.from(state.pgkTemp[qi]).sort((a,b)=>a-b);
+            const correctArr = PGK[qi].ans;
+            const isCorrect = JSON.stringify(selected) === JSON.stringify(correctArr);
+            state.answered.pgk[qi] = isCorrect;
+            PGK[qi].opts.forEach((_, idx) => {
+                const btn = document.getElementById(`opt-pgk-${qi}-${idx}`);
+                btn.classList.add('locked');
+                if(correctArr.includes(idx)) btn.classList.add('correct');
+                else if(selected.includes(idx)) btn.classList.add('wrong');
+            });
+            document.getElementById(`check-pgk-${qi}`).classList.add('hidden');
+            const fb = document.getElementById(`fb-pgk-${qi}`);
+            fb.classList.remove('hidden');
+            fb.className = `mt-8 p-6 rounded-3xl text-xs font-black uppercase tracking-[0.2em] border ${isCorrect ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-red-50 text-red-700 border-red-100'}`;
+            fb.innerHTML = isCorrect ? `✓ Jawaban Tepat` : `✗ Jawaban Benar: ${correctArr.map(a => String.fromCharCode(65+a)).join(', ')}`;
+            document.getElementById(`dot-pgk-${qi}`).classList.add('answered');
+            updateUI();
+        }
+
+        function submitEssay(qi) {
+            const text = document.getElementById(`inp-essay-${qi}`).value.trim();
+            if(!text) return;
+            state.answered.essay[qi] = text;
+            document.getElementById(`inp-essay-${qi}`).disabled = true;
+            document.getElementById(`btn-essay-${qi}`).classList.add('hidden');
+            document.getElementById(`fb-essay-${qi}`).classList.remove('hidden');
+            document.getElementById(`dot-essay-${qi}`).classList.add('answered');
+            updateUI();
+        }
+
+        window.onload = () => {
+            renderQuiz();
+            updateUI();
+        };
+    </script>
+</body>
+</html>
