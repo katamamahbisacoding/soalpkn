@@ -39,7 +39,7 @@
 
         .q-card:hover {
             border-color: #CBD5E1;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.04), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.04);
         }
 
         .opt-btn {
@@ -51,14 +51,12 @@
         .opt-btn:hover:not(.locked) {
             border-color: var(--primary);
             background-color: var(--primary-soft);
-            transform: translateX(4px);
         }
 
         .opt-btn.selected {
             border-color: var(--primary);
             background-color: var(--primary);
             color: white;
-            transform: translateX(8px);
         }
 
         .opt-btn.correct {
@@ -74,14 +72,14 @@
         }
 
         .nav-dot {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
             border: 1px solid #E2E8F0;
@@ -92,18 +90,12 @@
             background: var(--primary); 
             color: white; 
             border-color: var(--primary);
-            box-shadow: 0 4px 6px -1px rgba(153, 27, 27, 0.2);
-        }
-        
-        .nav-dot:hover {
-            transform: scale(1.1);
-            border-color: var(--primary);
         }
 
         .section-divider {
             position: relative;
             text-align: center;
-            margin: 4rem 0 2rem;
+            margin: 3rem 0 1.5rem;
         }
         .section-divider::before {
             content: "";
@@ -112,147 +104,175 @@
             left: 0;
             width: 100%;
             height: 1px;
-            background: linear-gradient(to right, transparent, #E2E8F0, transparent);
+            background: #E2E8F0;
         }
         .section-divider span {
             position: relative;
             background: var(--slate-bg);
-            padding: 0 2rem;
+            padding: 0 1rem;
             font-weight: 800;
             color: #94A3B8;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
-            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            font-size: 0.65rem;
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .animate-slide { animation: slideUp 0.5s ease-out forwards; }
+        .animate-slide { animation: slideUp 0.4s ease-out forwards; }
         
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+        .mobile-nav-overlay {
+            transition: opacity 0.3s ease, visibility 0.3s;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .mobile-nav-content {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
     </style>
 </head>
 <body class="pb-24">
 
-    <!-- Premium Header -->
-    <header class="glass-header sticky top-0 z-50 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-red-800 to-red-600 rounded-2xl flex items-center justify-center shadow-xl shadow-red-200 transform -rotate-3">
-                    <span class="text-white font-black text-2xl tracking-tighter">P</span>
+    <!-- Header Responsif -->
+    <header class="glass-header sticky top-0 z-40 px-4 md:px-6 py-3 md:py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-red-800 rounded-xl flex items-center justify-center shadow-lg shadow-red-100 flex-shrink-0">
+                    <span class="text-white font-black text-xl md:text-2xl">P</span>
                 </div>
-                <div>
-                    <h1 class="font-extrabold text-slate-900 text-xl tracking-tight">Pendidikan Pancasila</h1>
-                    <div class="flex items-center gap-2">
-                        <span class="inline-block w-2 h-2 rounded-full bg-amber-500"></span>
-                        <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Kelas XII • Premium Courseware</p>
-                    </div>
+                <div class="overflow-hidden">
+                    <h1 class="font-extrabold text-slate-900 text-sm md:text-xl truncate">Pendidikan Pancasila</h1>
+                    <p class="text-[9px] md:text-[11px] text-slate-500 font-bold uppercase tracking-wider">Kelas XII • Premium Edition</p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-6 bg-white shadow-sm px-6 py-3 rounded-2xl border border-slate-100">
-                <div class="flex flex-col items-start min-w-[100px]">
-                    <span class="text-[10px] uppercase tracking-widest text-slate-400 font-black">Progress</span>
-                    <span class="text-lg font-black text-slate-800" id="prog-text">0/120</span>
+            <div class="flex items-center gap-3 md:gap-6 bg-white shadow-sm px-4 py-2 md:py-3 rounded-xl md:rounded-2xl border border-slate-100 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex flex-col items-start min-w-[70px]">
+                    <span class="text-[8px] md:text-[10px] uppercase text-slate-400 font-black">Progress</span>
+                    <span class="text-sm md:text-lg font-black text-slate-800" id="prog-text">0/120</span>
                 </div>
-                <div class="w-40 md:w-64 h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                    <div id="prog-bar" class="h-full bg-gradient-to-r from-red-800 to-red-500 transition-all duration-700 ease-out" style="width: 0%"></div>
+                <div class="flex-1 md:flex-none md:w-48 lg:w-64 h-2 bg-slate-100 rounded-full overflow-hidden mx-2">
+                    <div id="prog-bar" class="h-full bg-red-700 transition-all duration-700 ease-out" style="width: 0%"></div>
                 </div>
-                <div class="flex gap-3">
-                    <div class="flex flex-col items-center">
-                        <span class="text-[9px] font-black text-emerald-500 uppercase">Benar</span>
-                        <span class="text-sm font-bold text-emerald-700" id="head-benar">0</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span class="text-[9px] font-black text-red-500 uppercase">Salah</span>
-                        <span class="text-sm font-bold text-red-700" id="head-salah">0</span>
-                    </div>
+                <div class="flex gap-2">
+                    <span class="text-[10px] md:text-sm font-bold text-emerald-600" id="head-benar">0✓</span>
+                    <span class="text-[10px] md:text-sm font-bold text-red-600" id="head-salah">0✗</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 mt-12 flex flex-col lg:flex-row gap-10">
+    <main class="max-w-7xl mx-auto px-4 md:px-6 mt-6 md:mt-12 flex flex-col lg:flex-row gap-8 lg:gap-10">
         
-        <!-- Smart Navigation Sidebar -->
-        <aside class="lg:w-[320px] order-2 lg:order-1">
-            <div class="sticky top-32 bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/50">
-                <h3 class="font-extrabold text-slate-900 mb-6 flex items-center justify-between">
-                    <span>Index Soal</span>
-                    <span class="bg-slate-50 text-slate-400 text-[10px] px-2 py-1 rounded-md">120 Total</span>
+        <!-- Desktop Sidebar Nav -->
+        <aside class="hidden lg:block lg:w-[300px]">
+            <div class="sticky top-32 bg-white rounded-[2rem] p-6 border border-slate-100 shadow-xl shadow-slate-200/40">
+                <h3 class="font-black text-slate-900 mb-6 flex items-center justify-between text-sm">
+                    <span>INDEX SOAL</span>
+                    <span class="text-[10px] text-slate-400 font-bold">120 TOTAL</span>
                 </h3>
                 
-                <div class="space-y-8 max-h-[55vh] overflow-y-auto pr-3 custom-scroll">
+                <div class="space-y-6 max-h-[50vh] overflow-y-auto pr-2 custom-scroll">
                     <div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">I. Pilihan Ganda</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">I. PG</p>
                         <div class="grid grid-cols-5 gap-2" id="nav-pg"></div>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">II. PG Kompleks</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">II. PGK</p>
                         <div class="grid grid-cols-5 gap-2" id="nav-pgk"></div>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">III. Essay</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">III. ESSAY</p>
                         <div class="grid grid-cols-5 gap-2" id="nav-essay"></div>
                     </div>
                 </div>
-
-                <div class="mt-10 pt-6 border-t border-slate-50">
-                    <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-red-800 transition-all shadow-xl shadow-slate-200">
-                        Ke Puncak Halaman
-                    </button>
+                <div class="mt-8 pt-6 border-t border-slate-50">
+                    <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-red-800 transition-all">Atas Halaman</button>
                 </div>
             </div>
         </aside>
 
-        <!-- Question Content -->
-        <div class="flex-1 order-1 lg:order-2 space-y-8" id="quiz-container">
-            <!-- Questions rendered by JS -->
+        <!-- Container Soal -->
+        <div class="flex-1 space-y-6 md:space-y-8" id="quiz-container">
+            <!-- Render via JS -->
         </div>
     </main>
 
-    <!-- Success Modal Card -->
-    <div id="finish-card" class="max-w-4xl mx-auto px-6 mt-16 mb-24 hidden animate-slide">
-        <div class="bg-white border border-slate-100 rounded-[3.5rem] p-12 text-center shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 via-red-600 to-amber-400"></div>
-            <div class="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                </svg>
+    <!-- Tombol Navigasi Mobile (FAB) -->
+    <div class="lg:hidden fixed bottom-6 right-6 z-50">
+        <button onclick="toggleMobileNav()" class="w-14 h-14 bg-red-800 text-white rounded-full shadow-2xl flex items-center justify-center transform active:scale-90 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Drawer Navigasi Mobile -->
+    <div id="mobile-nav" class="lg:hidden fixed inset-0 z-50 invisible opacity-0 mobile-nav-overlay">
+        <div class="absolute inset-y-0 right-0 w-[85%] max-w-sm bg-white shadow-2xl transform translate-x-full mobile-nav-content flex flex-col">
+            <div class="p-6 border-bottom border-slate-100 flex items-center justify-between bg-slate-50">
+                <h3 class="font-black text-slate-900 text-sm">NAVIGASI SOAL</h3>
+                <button onclick="toggleMobileNav()" class="p-2 text-slate-400 hover:text-slate-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
-            <h2 class="text-4xl font-black text-slate-900 mb-4 tracking-tight">Kuis Selesai!</h2>
-            <p class="text-slate-500 font-medium mb-10 text-lg">Anda telah menuntaskan seluruh tantangan hari ini dengan baik.</p>
+            <div class="flex-1 overflow-y-auto p-6 space-y-8">
+                <div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Pilihan Ganda (100)</p>
+                    <div class="grid grid-cols-6 gap-2" id="m-nav-pg"></div>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">PG Kompleks (10)</p>
+                    <div class="grid grid-cols-6 gap-2" id="m-nav-pgk"></div>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Essay (10)</p>
+                    <div class="grid grid-cols-6 gap-2" id="m-nav-essay"></div>
+                </div>
+            </div>
+            <div class="p-6 bg-slate-50">
+                <button onclick="toggleMobileNav()" class="w-full py-4 bg-red-800 text-white rounded-xl font-bold text-xs uppercase tracking-widest">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Skor Akhir -->
+    <div id="finish-card" class="max-w-4xl mx-auto px-4 md:px-6 mt-10 md:mt-16 mb-24 hidden animate-slide">
+        <div class="bg-white border border-slate-100 rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-12 text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-800 to-amber-500"></div>
+            <h2 class="text-2xl md:text-4xl font-black text-slate-900 mb-2 tracking-tight">Kuis Selesai!</h2>
+            <p class="text-slate-500 font-medium mb-8 text-sm md:text-lg italic">Hasil perjuangan Anda hari ini.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto mb-12">
-                <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 transform transition hover:scale-105">
-                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Benar</p>
-                    <p class="text-4xl font-black text-emerald-600" id="res-benar">0</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto mb-10">
+                <div class="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100">
+                    <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Benar</p>
+                    <p class="text-2xl md:text-4xl font-black text-emerald-600" id="res-benar">0</p>
                 </div>
-                <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 transform transition hover:scale-105">
-                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Salah</p>
-                    <p class="text-4xl font-black text-red-600" id="res-salah">0</p>
+                <div class="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100">
+                    <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Salah</p>
+                    <p class="text-2xl md:text-4xl font-black text-red-600" id="res-salah">0</p>
                 </div>
-                <div class="bg-slate-900 p-6 rounded-[2rem] transform transition hover:scale-105">
-                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Skor Akhir</p>
-                    <p class="text-4xl font-black text-white" id="res-skor">0</p>
+                <div class="bg-slate-900 p-4 md:p-6 rounded-2xl shadow-xl">
+                    <p class="text-[9px] font-black text-slate-500 uppercase mb-1">Skor</p>
+                    <p class="text-2xl md:text-4xl font-black text-white" id="res-skor">0</p>
                 </div>
             </div>
             
-            <button onclick="location.reload()" class="px-12 py-5 bg-red-800 text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-red-900 transition-all shadow-2xl shadow-red-200">
-                Ulangi Ujian
-            </button>
+            <button onclick="location.reload()" class="w-full md:w-auto px-12 py-4 md:py-5 bg-red-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-red-200">Ulangi Ujian</button>
         </div>
     </div>
 
     <script>
-        // ORIGINAL DATA - NO REDUCTION
+        // DATA TETAP 100% SAMA (TOTAL 120 SOAL)
         const RAW_PG = [
             {q:"Lembaga legislatif di Indonesia terdiri atas...",opts:["MPR, DPR, dan DPD","MPR, MA, dan MK","Presiden, DPR, dan BPK","DPR, DPD, dan KY","MA, MK, dan KPK"],ans:0},
             {q:"Anggota DPR dipilih melalui...",opts:["Penunjukan presiden","Pemilihan umum oleh rakyat","Keputusan MPR","Pemilihan oleh DPD","Seleksi Mahkamah Agung"],ans:1},
@@ -380,26 +400,23 @@
             "Jelaskan peran lembaga negara (pilih salah satu: KPK, Komisi Yudisial, atau Bank Indonesia) dalam berbagai bidang kehidupan berbangsa dan bernegara!"
         ];
 
-        // SHUFFLE LOGIC
+        // LOGIKA ACAK JAWABAN
         function shuffleOptions(data) {
             return data.map(item => {
                 const correctTexts = Array.isArray(item.ans) 
                     ? item.ans.map(idx => item.opts[idx]) 
                     : item.opts[item.ans];
-
                 const shuffledOpts = [...item.opts];
                 for (let i = shuffledOpts.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [shuffledOpts[i], shuffledOpts[j]] = [shuffledOpts[j], shuffledOpts[i]];
                 }
-
                 let newAns;
                 if (Array.isArray(item.ans)) {
                     newAns = correctTexts.map(t => shuffledOpts.indexOf(t)).sort((a,b)=>a-b);
                 } else {
                     newAns = shuffledOpts.indexOf(correctTexts);
                 }
-
                 return { ...item, opts: shuffledOpts, ans: newAns };
             });
         }
@@ -411,6 +428,20 @@
             answered: { pg: {}, pgk: {}, essay: {} },
             pgkTemp: {}
         };
+
+        function toggleMobileNav() {
+            const nav = document.getElementById('mobile-nav');
+            const isVisible = !nav.classList.contains('invisible');
+            if(isVisible) {
+                nav.querySelector('.mobile-nav-content').classList.add('translate-x-full');
+                nav.classList.add('opacity-0');
+                setTimeout(() => nav.classList.add('invisible'), 300);
+            } else {
+                nav.classList.remove('invisible');
+                nav.classList.remove('opacity-0');
+                setTimeout(() => nav.querySelector('.mobile-nav-content').classList.remove('translate-x-full'), 10);
+            }
+        }
 
         function updateUI() {
             const pgCount = Object.keys(state.answered.pg).length;
@@ -425,8 +456,8 @@
             Object.values(state.answered.pg).forEach(v => v ? benar++ : salah++);
             Object.values(state.answered.pgk).forEach(v => v ? benar++ : salah++);
             
-            document.getElementById('head-benar').textContent = benar;
-            document.getElementById('head-salah').textContent = salah;
+            document.getElementById('head-benar').textContent = benar + '✓';
+            document.getElementById('head-salah').textContent = salah + '✗';
 
             if(total === 120) {
                 document.getElementById('finish-card').classList.remove('hidden');
@@ -440,67 +471,61 @@
             const container = document.getElementById('quiz-container');
             let html = '';
 
-            // Render Section PG
-            html += `<div class="section-divider"><span>Bagian I — Pilihan Ganda (100)</span></div>`;
+            // Section PG
+            html += `<div class="section-divider"><span>Bagian I — Pilihan Ganda</span></div>`;
             PG.forEach((q, i) => {
                 html += `
-                <div id="q-pg-${i}" class="q-card rounded-[2.5rem] p-10 animate-slide" style="animation-delay: ${i * 0.05}s">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="bg-red-800 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Butir ${i+1}</span>
-                        <div class="h-1 w-8 bg-slate-100 rounded-full"></div>
-                        <span class="text-slate-400 text-[10px] font-black uppercase tracking-wider">Multiple Choice</span>
+                <div id="q-pg-${i}" class="q-card rounded-3xl p-6 md:p-10 animate-slide">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-red-800 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase">No. ${i+1}</span>
                     </div>
-                    <p class="text-slate-900 font-bold leading-relaxed mb-10 text-lg md:text-xl">${q.q}</p>
-                    <div class="grid grid-cols-1 gap-4">
+                    <p class="text-slate-900 font-bold leading-relaxed mb-8 text-sm md:text-lg">${q.q}</p>
+                    <div class="grid grid-cols-1 gap-3">
                         ${q.opts.map((opt, oi) => `
-                            <button onclick="handlePG(${i}, ${oi})" id="opt-pg-${i}-${oi}" class="opt-btn flex items-center text-left gap-5 p-5 rounded-2xl text-[15px] font-bold group">
-                                <span class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xs font-black text-slate-400 group-hover:border-red-800 transition-colors">${String.fromCharCode(65+oi)}</span>
+                            <button onclick="handlePG(${i}, ${oi})" id="opt-pg-${i}-${oi}" class="opt-btn flex items-center text-left gap-4 p-4 rounded-xl text-sm font-bold group">
+                                <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-[10px] font-black text-slate-400 group-hover:border-red-800">${String.fromCharCode(65+oi)}</span>
                                 <span class="flex-1">${opt}</span>
                             </button>
                         `).join('')}
                     </div>
-                    <div id="fb-pg-${i}" class="mt-8 p-6 rounded-3xl hidden text-sm font-bold border transform transition duration-500 scale-95 opacity-0"></div>
+                    <div id="fb-pg-${i}" class="mt-6 p-4 rounded-xl hidden text-[11px] font-black uppercase tracking-widest border"></div>
                 </div>`;
             });
 
-            // Render Section PGK
-            html += `<div class="section-divider"><span>Bagian II — PG Kompleks (10)</span></div>`;
+            // Section PGK
+            html += `<div class="section-divider"><span>Bagian II — PG Kompleks</span></div>`;
             PGK.forEach((q, i) => {
                 html += `
-                <div id="q-pgk-${i}" class="q-card rounded-[2.5rem] p-10">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="bg-amber-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Butir ${101+i}</span>
-                        <div class="h-1 w-8 bg-slate-100 rounded-full"></div>
-                        <span class="text-slate-400 text-[10px] font-black uppercase tracking-wider">Pilih 3 Jawaban</span>
+                <div id="q-pgk-${i}" class="q-card rounded-3xl p-6 md:p-10">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-amber-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase">No. ${101+i}</span>
                     </div>
-                    <p class="text-slate-900 font-bold leading-relaxed mb-10 text-lg md:text-xl">${q.q}</p>
-                    <div class="grid grid-cols-1 gap-4 mb-8">
+                    <p class="text-slate-900 font-bold leading-relaxed mb-8 text-sm md:text-lg">${q.q}</p>
+                    <div class="grid grid-cols-1 gap-3 mb-6">
                         ${q.opts.map((opt, oi) => `
-                            <button onclick="handlePGKTemp(${i}, ${oi})" id="opt-pgk-${i}-${oi}" class="opt-btn flex items-center text-left gap-5 p-5 rounded-2xl text-[15px] font-bold">
-                                <span class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xs font-black text-slate-400">${String.fromCharCode(65+oi)}</span>
+                            <button onclick="handlePGKTemp(${i}, ${oi})" id="opt-pgk-${i}-${oi}" class="opt-btn flex items-center text-left gap-4 p-4 rounded-xl text-sm font-bold">
+                                <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-[10px] font-black text-slate-400">${String.fromCharCode(65+oi)}</span>
                                 <span class="flex-1">${opt}</span>
                             </button>
                         `).join('')}
                     </div>
-                    <button id="check-pgk-${i}" onclick="checkPGK(${i})" disabled class="w-full py-5 bg-slate-100 text-slate-400 rounded-3xl font-black text-xs uppercase tracking-widest transition-all">Pilih 3 Jawaban</button>
-                    <div id="fb-pgk-${i}" class="mt-8 p-6 rounded-3xl hidden text-sm font-bold border"></div>
+                    <button id="check-pgk-${i}" onclick="checkPGK(${i})" disabled class="w-full py-4 bg-slate-100 text-slate-400 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all">Pilih 3 Jawaban</button>
+                    <div id="fb-pgk-${i}" class="mt-6 p-4 rounded-xl hidden text-[11px] font-black uppercase tracking-widest border"></div>
                 </div>`;
             });
 
-            // Render Section Essay
-            html += `<div class="section-divider"><span>Bagian III — Essay (10)</span></div>`;
+            // Section Essay
+            html += `<div class="section-divider"><span>Bagian III — Essay</span></div>`;
             ESSAY.forEach((q, i) => {
                 html += `
-                <div id="q-essay-${i}" class="q-card rounded-[2.5rem] p-10">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="bg-slate-900 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Butir ${111+i}</span>
-                        <div class="h-1 w-8 bg-slate-100 rounded-full"></div>
-                        <span class="text-slate-400 text-[10px] font-black uppercase tracking-wider">Uraian / Essay</span>
+                <div id="q-essay-${i}" class="q-card rounded-3xl p-6 md:p-10">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-slate-900 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase">No. ${111+i}</span>
                     </div>
-                    <p class="text-slate-900 font-bold leading-relaxed mb-10 text-lg md:text-xl">${q}</p>
-                    <textarea id="inp-essay-${i}" placeholder="Analisis dan tuliskan jawaban Anda di sini..." class="w-full min-h-[200px] p-8 rounded-3xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-red-800/5 focus:bg-white transition-all text-sm font-medium mb-6 placeholder:text-slate-300"></textarea>
-                    <button id="btn-essay-${i}" onclick="submitEssay(${i})" class="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-red-800 transition-all shadow-xl shadow-slate-200">Simpan Jawaban Uraian</button>
-                    <div id="fb-essay-${i}" class="mt-6 p-6 rounded-3xl hidden bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-black uppercase tracking-widest">✓ Jawaban Tersimpan</div>
+                    <p class="text-slate-900 font-bold leading-relaxed mb-8 text-sm md:text-lg">${q}</p>
+                    <textarea id="inp-essay-${i}" placeholder="Tuliskan jawaban Anda..." class="w-full min-h-[150px] p-5 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:bg-white text-sm font-medium mb-4"></textarea>
+                    <button id="btn-essay-${i}" onclick="submitEssay(${i})" class="w-full py-4 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase tracking-widest">Simpan Jawaban</button>
+                    <div id="fb-essay-${i}" class="mt-4 p-4 rounded-xl hidden bg-emerald-50 text-emerald-700 border border-emerald-100 text-[10px] font-black uppercase">✓ Tersimpan</div>
                 </div>`;
             });
 
@@ -512,15 +537,29 @@
             const pgNav = document.getElementById('nav-pg');
             const pgkNav = document.getElementById('nav-pgk');
             const essayNav = document.getElementById('nav-essay');
+            const mPgNav = document.getElementById('m-nav-pg');
+            const mPgkNav = document.getElementById('m-nav-pgk');
+            const mEssayNav = document.getElementById('m-nav-essay');
 
-            pgNav.innerHTML = PG.map((_, i) => `<div id="dot-pg-${i}" onclick="scrollToSoal('q-pg-${i}')" class="nav-dot"> ${i+1} </div>`).join('');
-            pgkNav.innerHTML = PGK.map((_, i) => `<div id="dot-pgk-${i}" onclick="scrollToSoal('q-pgk-${i}')" class="nav-dot"> ${101+i} </div>`).join('');
-            essayNav.innerHTML = ESSAY.map((_, i) => `<div id="dot-essay-${i}" onclick="scrollToSoal('q-essay-${i}')" class="nav-dot"> ${111+i} </div>`).join('');
+            const pgDots = PG.map((_, i) => `<div id="dot-pg-${i}" onclick="jumpTo('q-pg-${i}')" class="nav-dot">${i+1}</div>`).join('');
+            const pgkDots = PGK.map((_, i) => `<div id="dot-pgk-${i}" onclick="jumpTo('q-pgk-${i}')" class="nav-dot">${101+i}</div>`).join('');
+            const essayDots = ESSAY.map((_, i) => `<div id="dot-essay-${i}" onclick="jumpTo('q-essay-${i}')" class="nav-dot">${111+i}</div>`).join('');
+
+            pgNav.innerHTML = pgDots; pgkNav.innerHTML = pgkDots; essayNav.innerHTML = essayDots;
+            mPgNav.innerHTML = pgDots.replace(/dot-/g, 'm-dot-'); 
+            mPgkNav.innerHTML = pgkDots.replace(/dot-/g, 'm-dot-'); 
+            mEssayNav.innerHTML = essayDots.replace(/dot-/g, 'm-dot-');
+        }
+
+        function jumpTo(id) {
+            scrollToSoal(id);
+            const nav = document.getElementById('mobile-nav');
+            if(!nav.classList.contains('invisible')) toggleMobileNav();
         }
 
         function scrollToSoal(id) {
             const el = document.getElementById(id);
-            const headerOffset = 160;
+            const headerOffset = window.innerWidth < 768 ? 100 : 160;
             const elementPosition = el.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
             window.scrollTo({ top: offsetPosition, behavior: "smooth" });
@@ -530,24 +569,19 @@
             if(state.answered.pg[qi] !== undefined) return;
             const isCorrect = PG[qi].ans === oi;
             state.answered.pg[qi] = isCorrect;
-
             PG[qi].opts.forEach((_, idx) => {
                 const btn = document.getElementById(`opt-pg-${qi}-${idx}`);
                 btn.classList.add('locked');
                 if(idx === PG[qi].ans) btn.classList.add('correct');
                 else if(idx === oi) btn.classList.add('wrong');
             });
-
             const fb = document.getElementById(`fb-pg-${qi}`);
             fb.classList.remove('hidden');
-            setTimeout(() => {
-                fb.classList.remove('scale-95', 'opacity-0');
-            }, 50);
-            
-            fb.className = `mt-8 p-6 rounded-3xl text-xs font-black uppercase tracking-[0.2em] border transition-all duration-500 ${isCorrect ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-red-50 text-red-700 border-red-100'}`;
-            fb.innerHTML = isCorrect ? `✓ Jawaban Tepat` : `✗ Jawaban Benar: ${String.fromCharCode(65+PG[qi].ans)}`;
+            fb.className = `mt-6 p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border ${isCorrect ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-red-50 text-red-700 border-red-100'}`;
+            fb.innerHTML = isCorrect ? `✓ Tepat` : `✗ Benar: ${String.fromCharCode(65+PG[qi].ans)}`;
             
             document.getElementById(`dot-pg-${qi}`).classList.add('answered');
+            document.getElementById(`m-dot-pg-${qi}`).classList.add('answered');
             updateUI();
         }
 
@@ -566,12 +600,12 @@
             const checkBtn = document.getElementById(`check-pgk-${qi}`);
             if(state.pgkTemp[qi].size === 3) {
                 checkBtn.disabled = false;
-                checkBtn.className = "w-full py-5 bg-red-800 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-red-100 hover:bg-red-900 transition-all";
+                checkBtn.className = "w-full py-4 bg-red-800 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg";
                 checkBtn.textContent = "Koreksi Jawaban";
             } else {
                 checkBtn.disabled = true;
-                checkBtn.className = "w-full py-5 bg-slate-100 text-slate-400 rounded-3xl font-black text-xs uppercase tracking-widest transition-all";
-                checkBtn.textContent = `Pilih ${3 - state.pgkTemp[qi].size} Jawaban Lagi`;
+                checkBtn.className = "w-full py-4 bg-slate-100 text-slate-400 rounded-xl font-black text-[10px] uppercase tracking-widest";
+                checkBtn.textContent = `Pilih ${3 - state.pgkTemp[qi].size} Lagi`;
             }
         }
 
@@ -589,9 +623,10 @@
             document.getElementById(`check-pgk-${qi}`).classList.add('hidden');
             const fb = document.getElementById(`fb-pgk-${qi}`);
             fb.classList.remove('hidden');
-            fb.className = `mt-8 p-6 rounded-3xl text-xs font-black uppercase tracking-[0.2em] border ${isCorrect ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-red-50 text-red-700 border-red-100'}`;
-            fb.innerHTML = isCorrect ? `✓ Jawaban Tepat` : `✗ Jawaban Benar: ${correctArr.map(a => String.fromCharCode(65+a)).join(', ')}`;
+            fb.className = `mt-6 p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border ${isCorrect ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-red-50 text-red-700 border-red-100'}`;
+            fb.innerHTML = isCorrect ? `✓ Tepat` : `✗ Benar: ${correctArr.map(a => String.fromCharCode(65+a)).join(', ')}`;
             document.getElementById(`dot-pgk-${qi}`).classList.add('answered');
+            document.getElementById(`m-dot-pgk-${qi}`).classList.add('answered');
             updateUI();
         }
 
@@ -603,6 +638,7 @@
             document.getElementById(`btn-essay-${qi}`).classList.add('hidden');
             document.getElementById(`fb-essay-${qi}`).classList.remove('hidden');
             document.getElementById(`dot-essay-${qi}`).classList.add('answered');
+            document.getElementById(`m-dot-essay-${qi}`).classList.add('answered');
             updateUI();
         }
 
